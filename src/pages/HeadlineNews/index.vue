@@ -1,30 +1,29 @@
 <template>
   <div class="container">
     <div class="listItem">
-      <!-- 每一项头条列表 -->
+      <!-- Headlines -->
       <div class="containerItem" v-for="item in pageData" :key="item.hid">
         <div>
           <span class="text">{{ item.title }}</span>
         </div>
         <div class="detail">
-          <span>{{ item.type == 1 ? "新闻":item.type == 2 ? "体育": item.type == 3 ? "娱乐": item.type == 4 ? "科技" : "其他" }}</span>
-          <span>{{item.pageViews}}浏览</span>
-          <span>{{item.pastHours}}小时前</span>
+          <span>{{ item.type == 1 ? "News":item.type == 2 ? "Sports": item.type == 3 ? "Entertainment": item.type == 4 ? "Tech" : "Others" }}</span>
+          <span>{{item.pageViews}} views</span>
         </div>
         <div>
           <el-button @click="toDetail(item.hid)" size="small"
-            style="background: #198754; margin-left: 15px; color: #bbd3dc">查看全文</el-button>
-          <el-popconfirm v-if="item.publisher == type" @confirm="handlerDelete(item.hid)" :title="`您确定要删除${item.title}吗?`">
+            style="background: #198754; margin-left: 15px; color: #bbd3dc">View Full Article</el-button>
+          <el-popconfirm v-if="item.publisher == type" @confirm="handlerDelete(item.hid)" :title="`Do you want to delete ${item.title}?`">
             <template #reference>
-              <el-button    size="small" style="background: #dc3545; color: #bbd3dc">删除</el-button>
+              <el-button    size="small" style="background: #dc3545; color: #bbd3dc">Delete</el-button>
             </template>
           </el-popconfirm>
 
-          <el-button @click="Modify(item.hid)" v-if="item.publisher == type"  size="small" style="background: #212529; color: #bbd3dc">修改</el-button>
+          <el-button @click="Modify(item.hid)" v-if="item.publisher == type"  size="small" style="background: #212529; color: #bbd3dc">Update</el-button>
         </div>
       </div>
   
-      <!-- 分页器 -->
+      <!-- Pagination -->
       <div style="margin-top: 20px">
         <el-pagination 
           v-model:current-page="findNewsPageInfo.pageNum"
@@ -59,14 +58,14 @@ const router = useRouter()
 const type = userInfoStore.uid
 const findNewsPageInfo = ref(
   {
-    keyWords: "", // 搜索标题关键字
-    type: 0,           // 新闻类型
-    pageNum: 1,        // 页码数
-    pageSize: 5,     // 页大小
+    keyWords: "", // keywords
+    type: 0,           // headline type
+    pageNum: 1,        // page number
+    pageSize: 5,     // page size
   }
 )
-const totalSize = ref(0) //分页总数量
-// 初始化列表数据
+const totalSize = ref(0) //size of pages
+// page data initialization
 const pageData = ref([{
   hid: null,
   pageViews: null,
@@ -77,21 +76,22 @@ const pageData = ref([{
 }])
 
 
-//接收header组件用户搜索的数据
+//Receive data searched by users from the header component.
 Bus.on('keyword', (keywords) => {
   findNewsPageInfo.value.keyWords = keywords
 })
-// header点击切换高亮的时候传递过来的tid
+//tid passed over when the header is clicked to toggle highlight."
 Bus.on('tid', (type) => {
   findNewsPageInfo.value.type = type
 })
-// 监视初始化参数type的变化,当type发生改变的时候重新发送请求获取列表数据
+// Monitor changes in the initialization parameter 'type',
+// and resend the request to fetch the list data when 'type' changes
 watch(() => findNewsPageInfo.value, () => {
   getPageList()
 }, {
   deep: true,
 })
-// 初始化请求分页列表数据
+// Initialize request for paginated list data
 const getPageList = async () => {
   let result = await getfindNewsPageInfo(findNewsPageInfo.value)
   pageData.value = result.pageInfo.pageData
@@ -99,23 +99,23 @@ const getPageList = async () => {
  findNewsPageInfo.value.pageSize = result.pageInfo.pageSize
  totalSize.value = +result.pageInfo.totalSize
 }
-// 组件挂载的生命周期钩子
+// Lifecycle hook for component mounting.
 onMounted(() => {
   getPageList()
 })
-// 点击查看全文的回调
+// redirect to details page
 const toDetail = (hid) => {
   router.push({ name: "Detail" ,query:{ hid }});
 }
 
-// 点击删除的回调
+// delete
 const handlerDelete = async (id) => {
   await removeByHid(id)
-  ElMessage.success('删除成功!')
-  //重新获取列表请求
+  ElMessage.success('Deleted!')
   getPageList()
 }
-//点击修改的回调
+//modify
+
 const Modify = (hid) => {
   router.push({ name: "addOrModifyNews", query: { hid } });
 }
@@ -128,8 +128,6 @@ const Modify = (hid) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  // 列表样式
   .listItem {
     .containerItem {
       margin-top: 20px;

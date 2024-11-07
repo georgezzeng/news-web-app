@@ -7,27 +7,27 @@
       class="login-form"
       :rules="loginRules" 
     >
-      <h2>用户登录</h2>
-      <el-form-item label="用户名" prop="username">
+      <h2>Log In Here</h2>
+      <el-form-item label="Username" prop="username">
         <el-input
           v-model="loginForm.username"
           ref="username"
           name="username"
           autocomplete="off"
-          placeholder="请输入用户名"
+          placeholder="Please Enter Username"
         ></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="userPwd">
+      <el-form-item label="Password" prop="userPwd">
         <el-input
           type="password"
           v-model="loginForm.userPwd"
           autocomplete="off"
-          placeholder="请输入密码"
+          placeholder="Please Enter Password"
         ></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="success" @click.native.prevent="login">登录</el-button>
-        <el-button type="primary" @click="toRegister">注册</el-button>
+        <el-button type="success" @click.native.prevent="login">Log in</el-button>
+        <el-button type="primary" @click="toRegister">Sign Up</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -49,35 +49,35 @@ const userInfoStore = useUserInfoStore()
 const router = useRouter()
 const formRef = ref<FormInstance>()
 const loading = ref(false)
-//账号密码参数
+//username and password
 const loginForm = ref({
-      username: "zhangsan",
-      userPwd: "123456",
+      username: "",
+      userPwd: "",
 })
-// 校验规则
+// check username
 const validateUsername = (rule: any, value: any, callback: any) => {
   if (value.length < 4) {
-    callback(new Error('用户名长度不能小于4位'))
+    callback(new Error('At least 4 characters long'))
   } else {
     callback()
   }
 }
-// 校验规则
+// check password
 const validatePassword = (rule: any, value: any, callback: any) => {
   if (value.length < 6) {
-    callback(new Error('密码长度不能小于6位'))
+    callback(new Error('At least 6 characters long'))
   } else {
     callback()
   }
 }
-// 校验规则
+// login rules
 const loginRules = {
   username: [{ required: true, validator: validateUsername }],
   userPwd: [{ required: true, trigger: 'blur', validator: validatePassword }]
 }
-//点击登录的回调
+//login
 const login = async () => {
-  // console.log('点击登录');
+
   await formRef.value?.validate()
   loading.value = true
   try {

@@ -1,15 +1,15 @@
 import request from "../utils/request/"
 
 // portal/findAllTypes
-//获取分类列表
+// get headlines of all types
 export const getfindAllTypes = () => {
   return request.get("portal/findAllTypes");
 };
-// 分页带条件查询所有头条
+// look up news by page
 export const getfindNewsPageInfo = (info) => {
   return request.post("portal/findNewsPage",info);
 };
-// 查看头条详情
+// show headline details
 export const getshowHeadlineDetail = (id) => {
     return request({
         method: "post",
@@ -21,7 +21,7 @@ export const getshowHeadlineDetail = (id) => {
   });
 };
 
-//删除的回调
+//callback function to remove headline by hid
 // headline/removeByHid
 export const removeByHid = (id) => {
     return request({
@@ -34,16 +34,16 @@ export const removeByHid = (id) => {
   })
 };
 
-//登录的接口
+//login
 export const getLogin = (info) => {
   return request.post("user/login",info);
 };
-//获取用户信息的接口
+//get user information
 export const getUserInfo = (info) => {
   return request.get("user/getUserInfo");
 };
 
-//注册校验的接口  user/checkUserName
+//validate user registration   user/checkUserName
 export const registerValidateApi = (username) => {
     return request({
          method: "post",
@@ -55,16 +55,16 @@ export const registerValidateApi = (username) => {
   })
 };
 
-// 注册的接口
+//user registration
 export const registerApi = (userInfo) => {
   return request.post("user/regist",userInfo)
 }
-//判断用户登录过期的接口
+//check if token is expired
 export const isUserOverdue = () => {
   return request.get("user/checkLogin")
 }
 
-// 修改头条回显的接口
+// get headline information by headline id
 export const getFindHeadlineByHid = (id) => {
     return request({
         method: "post",
@@ -76,7 +76,7 @@ export const getFindHeadlineByHid = (id) => {
   });
 };
 
-//点击保存修改的回调
+// save on click
 // headline/update
 export const saveOrAddNews = (news) => {
   return request.post("headline/update",news)

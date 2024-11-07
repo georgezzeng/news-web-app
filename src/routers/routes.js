@@ -5,31 +5,31 @@ export const staticRoutes = [
     redirect: "/headlinenews",
   },
   {
-    // 头条
+    // Headline
     path: "/headlinenews",
     component: () => import("../pages/HeadlineNews/index.vue"),
     name: "HeadlineNews",
   },
   {
-    //头条详情
+    // details page
     path: "/detail",
     component: () => import("../pages/Detail/index.vue"),
     name: "Detail",
   },
   {
-    // 登录
+    // login
     path: "/login",
     component: () => import("../pages/Login/index.vue"),
     name: "Login",
   },
   {
-    //注册
+    // register
     path: "/register",
     component: () => import("../pages/Register/index.vue"),
     name: "Register",
   },
    {
-    //发布新闻的页面
+    // modify news
     path: "/addormodifynews",
     component: () => import("../pages/addOrModifyNews/index.vue"),
     name: "addOrModifyNews",

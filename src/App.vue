@@ -14,10 +14,13 @@ import Header from './components/Header.vue'
   })
 </script>
 <script  setup>
+
 import { computed } from "vue"
 import { useRoute } from 'vue-router'
-const route = useRoute() // 路由信息对象
-// 判断是否显示header组件
+
+const route = useRoute() // router object
+
+//check is header should be displayed
  const isHeader =  computed(() => {
     return route.name !== "Login" && route.name !== "Register" && route.name !== "addNews";
 })

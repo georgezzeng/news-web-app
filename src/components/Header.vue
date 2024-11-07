@@ -1,6 +1,6 @@
 <template>
   <div class="headerContainer">
-    <!-- 头部左侧区域 -->
+    <!-- left part of header -->
     <div class="left">
       <ul>
         <li @click="HighlightHandler(index,)"  v-for="(item,index) in findAllTypeList" :key="item.tid">
@@ -8,36 +8,36 @@
         </li>
       </ul>
     </div>
-    <!-- 头部右侧区域 -->
+    <!-- right part of header -->
     <div class="right">
       <div class="rightInput" style="margin-right: 50px;">
-        <el-input v-model="keywords" placeholder="搜索最新头条"></el-input>
-        <!-- <el-button   type="primary">搜索</el-button> -->
+        <el-input v-model="keywords" placeholder="Search here"></el-input>
+        <!-- <el-button   type="primary"> search </el-button> -->
       </div>
 
   
-      <!-- 用户登录以后的展示 -->
+      <!-- After user login -->
       <div class="btn-dropdown">
-      <!-- 用户没有登录的时候的展示 -->
+      <!-- Before user login-->
      
       <div v-if="nickName" style="display: flex; justify-content: center; align-items: center;">
              <el-dropdown>
           <el-button type="primary">
-          您好:{{ nickName }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+          {{ nickName }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item @click="handlerNews">发布新闻</el-dropdown-item>
-              <el-dropdown-item>个人中心</el-dropdown-item>
-              <el-dropdown-item>浏览记录</el-dropdown-item>
-              <el-dropdown-item @click="Logout">退出登录</el-dropdown-item>
+              <el-dropdown-item @click="handlerNews">Publish</el-dropdown-item>
+              <el-dropdown-item>Profile</el-dropdown-item>
+              <el-dropdown-item>History</el-dropdown-item>
+              <el-dropdown-item @click="Logout">Log out</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
       </div>
        <div v-else class="containerButton">
-          <el-button size="small" style="background: #212529; color: #aea7a2" @click="toLogin">登录</el-button>
-          <el-button size="small" style="background: #ffc107; color: #684802" @click="toRegister">注册</el-button>
+          <el-button size="small" style="background: #212529; color: #aea7a2" @click="toLogin">Log in</el-button>
+          <el-button size="small" style="background: #ffc107; color: #684802" @click="toRegister">Sign up</el-button>
         </div>
       
       </div>
@@ -62,39 +62,41 @@ import pinia from '../stores/index';
 import { useUserInfoStore } from '../stores/userInfo'
 const userInfoStore = useUserInfoStore(pinia)
 const nickName = ref("")
-// 获取到 全局事件总线
+//Get access to the global event bus
 const { Bus } = getCurrentInstance().appContext.config.globalProperties
 const router = useRouter()
-const keywords = ref("") // 收集搜索最新头条参数
-//监视搜索参数的变化 ,当搜索参数变化的时候给HeadlineNews组件传递数据
+const keywords = ref("") // Collect search parameters for the latest headlines. 
+// Monitor changes in search parameters, and pass data to the Headline component when the search parameters change
 watch(keywords, (newVal) => {
   Bus.emit('keyword', newVal)
 })
-const findAllTypeList = ref([])//所有头条分类
+const findAllTypeList = ref([])//find headlines of all types
+//To login page
 const toLogin = () => {
 router.push({ name: "Login" });
 }
-//点击去注册页面
+//To registration page
 const toRegister = () => {
   router.push({ name: "Register" });
 }
 const getList = async () => {
   let result = await getfindAllTypes()
-  // 遍历数据添加高亮标识
+  // Iterate through data and add highlight markers.
   result.forEach((item) => {
     item.tid = item.tid
     item.tname = item.tname
     item.isHighlight = false
   })
-  // 添加微头条数据
+  // Add headline data
   result.unshift({
     isHighlight: true,
     tid: 0,
-    tname: "微头条"
+    tname: "Headline"
   })
   findAllTypeList.value = result
 }
-// 页面挂载的生命周期回调
+
+// Lifecycle callback for page mounting.
 onUpdated(() => {
   nickName.value = userInfoStore.nickName
 })
@@ -102,17 +104,17 @@ onMounted(() => {
   getList()
 })
 
-//点击切换高亮的回调(排他思想)
+//Callback for clicking to toggle highlight (exclusive concept)
 const HighlightHandler = (index) => {
   findAllTypeList.value.forEach((item) => {
     item.isHighlight = false
   })
-  // 切换高亮的时候把tid传给HeadlineNews组件
+  // When toggling the highlight, pass the tid to the HeadlineNews component
   findAllTypeList.value[index].isHighlight = true
   Bus.emit('tid', findAllTypeList.value[index].tid)
 }
 
-// 点击退出登录的回调
+// callback function for log out
 const Logout = () => {
   removeToken()
   userInfoStore.initUserInfo()
@@ -120,9 +122,9 @@ const Logout = () => {
   router.go({ name: "HeadlineNews" });
 }
 
-//点击发布新闻的回调
+//callback after publish is clicked
 const handlerNews = async () => {
-  //发送请求判断用户是否token过期
+  //send request to the backend to see if token is expired
   await isUserOverdue()
   router.push({ name: "addOrModifyNews" });
 }

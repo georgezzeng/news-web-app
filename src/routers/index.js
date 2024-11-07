@@ -14,7 +14,7 @@ const router = createRouter({
 
 const userInfoStore = useUserInfoStore(pinia)
 
-//全局前置守卫
+//Global before guard
 router.beforeEach(async (to, from, next) => {
   const token = getToken()
   const userInfo = !!userInfoStore.nickName
@@ -38,10 +38,10 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 
-// //使用全局后置钩子配置关闭进度条
+// //
 // router.afterEach(() => {
 //   NProgress.done();
 // });
 
-// 导出路由
+// export router
 export default router;

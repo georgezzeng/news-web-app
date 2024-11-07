@@ -5,8 +5,8 @@ import { getLogin,getUserInfo } from '../api/index';
 
 
 /**
- * 用户信息
- * @methods setUserInfos 设置用户信息
+ * user information
+ * @methods setUserInfos set user information
  */
 export const useUserInfoStore = defineStore('userInfo', {
 
@@ -17,11 +17,11 @@ export const useUserInfoStore = defineStore('userInfo', {
   }),
 
 	actions: {
-    // 登陆的异步action
+    // log in async action
     async login (loginForm) {
-       // 发送登陆的请求
+       // send request to login
       const result = await getLogin(loginForm)
-      // 请求成功后, 取出token保存  pinia和local中
+      // get token and save after login
       const token = result.token
       
       this.token = token
